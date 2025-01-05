@@ -11,6 +11,7 @@
 #include <model.h>
 
 #include <iostream>
+#include <iomanip>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -31,6 +32,10 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+float fTime = 0.0f;			// Time for measuring fps
+unsigned long frames = 0;
+
 
 int main()
 {
@@ -181,6 +186,20 @@ int main()
         // ------
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // FPS tracking 
+        // Count number of frames over a few seconds and take average
+        frames++;
+        fTime += deltaTime;
+        if (fTime > 2.0f) {
+            float fps = frames / fTime;
+            frames = 0;
+            fTime = 0;
+
+            std::stringstream stream;
+            stream << std::fixed << std::setprecision(2) << "Frames per second (FPS): " << fps;
+            glfwSetWindowTitle(window, stream.str().c_str());
+        }
 
         // draw scene as normal
 
